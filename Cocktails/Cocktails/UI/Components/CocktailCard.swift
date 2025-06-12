@@ -3,35 +3,38 @@ import SwiftUI
 struct CocktailCardView: View {
     let imageUrl: String
     let title: String
-    let ingredients: String
+    let ingredients: String?
     
     var body: some View {
-        HStack(spacing: 23) {
+        HStack(spacing: Constants.spacing) {
             if let url = URL(string: imageUrl) {
                 AsyncImage(url: url, content: {
                     $0.resizable()
                         .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                         .containerRelativeFrame(.horizontal) { size, axis in
-                            size * 0.21
+                            size * Constants.imageRatio
                         }
                 }, placeholder: {
-                    Image(systemName: "book.fill")
+                    Image(systemName: Constants.placeHolderImage)
                         .resizable()
                         .scaledToFit()
-                        .clipShape(RoundedRectangle(cornerRadius: 20))
+                        .clipShape(RoundedRectangle(cornerRadius: Constants.cornerRadius))
                         .containerRelativeFrame(.horizontal) { size, axis in
-                            size * 0.21
+                            size * Constants.imageRatio
                         }
                 })
-                .padding(.vertical, 20)
+                .padding(.vertical, Constants.padding)
             }
             
             VStack(alignment: .leading) {
                 Spacer()
                 Text(title)
-                Text(ingredients)
-                    .lineLimit(1)
+                
+                if let ingredients = ingredients {
+                    Text(ingredients)
+                        .lineLimit(Constants.lineLimit)
+                }
                 Spacer()
             }
         }
@@ -42,6 +45,20 @@ struct CocktailCardView: View {
             $0[.trailing]
         }
     }
+}
+
+// MARK: - Constants
+
+fileprivate struct Constants {
+    private init() {}
+    
+    static let placeHolderImage = "wineglass.fill"
+    
+    static let spacing: CGFloat = 23
+    static let cornerRadius: CGFloat = 20
+    static let imageRatio = 0.21
+    static let padding: CGFloat = 20
+    static let lineLimit = 1
 }
 
 #Preview {
