@@ -77,48 +77,23 @@ final class MockCocktailsListService: CocktailsListServiceProtocol {
                     imageUrl: "https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg",
                     ingredients: "White rum, soda, mint, sugar, lime"),
         CocktailDTO(id: "4",
-                    name: "Mojito",
-                    category: "Cocktail",
+                    name: "Acapulco",
+                    category: "Ordinary Drink",
                     alcoholic: "Alcoholic",
                     imageUrl: "https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg",
-                    ingredients: "White rum, soda, mint, sugar, lime"),
-        CocktailDTO(id: "5",
-                    name: "Long Island",
-                    category: "Cocktail",
-                    alcoholic: "Alcoholic",
-                    imageUrl: "https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg",
-                    ingredients: "White rum, soda, mint, sugar, lime"),
-        CocktailDTO(id: "6",
-                    name: "Negroni",
-                    category: "Cocktail",
-                    alcoholic: "Alcoholic",
-                    imageUrl: "https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg",
-                    ingredients: "White rum, soda, mint, sugar, lime"),
-        CocktailDTO(id: "7",
-                    name: "Mojito",
-                    category: "Cocktail",
-                    alcoholic: "Alcoholic",
-                    imageUrl: "https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg",
-                    ingredients: "White rum, soda, mint, sugar, lime"),
-        CocktailDTO(id: "8",
-                    name: "Long Island",
-                    category: "Cocktail",
-                    alcoholic: "Alcoholic",
-                    imageUrl: "https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg",
-                    ingredients: "White rum, soda, mint, sugar, lime"),
-        CocktailDTO(id: "9",
-                    name: "Negroni",
-                    category: "Cocktail",
-                    alcoholic: "Alcoholic",
-                    imageUrl: "https://www.thecocktaildb.com/images/media/drink/metwgh1606770327.jpg",
-                    ingredients: "White rum, soda, mint, sugar, lime")
+                    ingredients: "Light rum, Triple sec, Lime juice, sugar, Egg white, Mint"),
     ]
     
     func fetchCocktailsList(_ query: String) -> AnyPublisher<CocktailsListResponseDTO, ApiError> {
         Future<CocktailsListResponseDTO, ApiError> { [weak self] promise in
             guard let self else { return }
             
-            return promise(.success(CocktailsListResponseDTO(drinks: mockCocktailsList)))
+            if query.isEmpty {
+                return promise(.failure(.decodingError(message: "The data couldn’t be read because it isn’t in the correct format.")))
+            }
+            
+            let filtered = mockCocktailsList.filter { $0.name.lowercased().contains(query.lowercased()) }
+            return promise(.success(CocktailsListResponseDTO(drinks: filtered)))
         }.eraseToAnyPublisher()
     }
 }

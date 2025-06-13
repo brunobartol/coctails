@@ -3,6 +3,8 @@ struct CocktailModel: Identifiable {
     let imageUrl: String
     let title: String
     let ingredients: String?
+    let category: String
+    let alcoholic: String
 }
 
 extension CocktailModel {
@@ -11,5 +13,7 @@ extension CocktailModel {
         self.imageUrl = dto.imageUrl
         self.title = dto.name
         self.ingredients = dto.ingredients
+        self.category = dto.category
+        self.alcoholic = dto.alcoholic
     }
 }
